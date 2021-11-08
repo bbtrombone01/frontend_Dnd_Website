@@ -108,12 +108,29 @@ function Signup () {
     const formSubmit = (event)=>{
         event.preventDefault()
         if(usernameStatus && initalPasswordStatus && confirnedPasswordStatus && emailStatus ){
-            const postRequestObject = {
-                "username": usernameStatus,
+        
+        fetch('http://localhost:5000/test',{
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                "username": currentName,
                 "password": initalPassword,
                 "email": currentEmail
-            }
-            console.log(postRequestObject)
+              })
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        
+        
+        
+        
+        
+        
+            // const postRequestObject = {
+            //     "username": usernameStatus,
+            //     "password": initalPassword,
+            //     "email": currentEmail
+            // }
         }
     }
 

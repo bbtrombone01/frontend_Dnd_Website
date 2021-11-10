@@ -1,8 +1,11 @@
 import {useState} from 'react'
+import {useNavigate} from "react-router-dom"
 
-// needs to change names of vairables and come up with css 
+//  come up with css 
 
 function Signup () {
+
+    const navigate = useNavigate()
     
     // state for  each form input field, should be updated every keystroke
     const [currentName, setName] = useState("")
@@ -29,6 +32,10 @@ function Signup () {
     const [confirnedPasswordStatus, serConfirmedPasswordStatus] = useState(false)
 
     const [emailStatus, setEmailStatus] = useState(false)
+
+    // error message for failed post request 
+
+    const [postError, setPostErorrMessage] = useState("")
 
 
     // updates input fieild state after every key stroke 
@@ -76,6 +83,9 @@ function Signup () {
         if(re.test(initalPassword)){
             setInitalPasswordStatus(true)
             setInitalPasswordError("")
+            if (confirnedPassword){
+                updatedPasswordBlur()
+            }
         }else if (initalPassword.length < 6){ 
             if(specialCharcterRe.test(initalPassword)){
                 setInitalPasswordError("Your password must have at least 6 characters")
@@ -105,53 +115,55 @@ function Signup () {
     }
 
     // will check overall form validity the send post request to node back end. 
-    const formSubmit = (event)=>{
+    const  formSubmit = async (event) =>{
         event.preventDefault()
-        if(usernameStatus && initalPasswordStatus && confirnedPasswordStatus && emailStatus ){
-        
-        fetch('http://localhost:5000/test',{
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                "username": currentName,
-                "password": initalPassword,
-                "email": currentEmail
-              })
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        
-        
-        
-        
-        
-        
-            // const postRequestObject = {
-            //     "username": usernameStatus,
-            //     "password": initalPassword,
-            //     "email": currentEmail
-            // }
-        }
-    }
 
+        if(usernameStatus && initalPasswordStatus && confirnedPasswordStatus && emailStatus ){
+           
+            try {
+                const fetchedDatat = await fetch('http://localhost:5000/test',{
+                     method: "POST",
+                     headers: {'Content-Type': 'application/json'},
+                     body: JSON.stringify({
+                         "username": currentName,
+                         "password": initalPassword,
+                         "email": currentEmail
+                         })
+                    })
+                    // may want to come back and  set try/ catch block
+                    let finalmessage = await fetchedDatat.json()
+                    setPostErorrMessage(finalmessage["message"])
+                    if(finalmessage["message"] === "i have recived a user"){
+                        navigate("/homepage")
+                    }
+                } catch (error){
+                        setPostErorrMessage("Failed to connect to server please try again later")
+                    }
+            }
+          
+    }
+    
     return (
-        <form onSubmit={formSubmit}>
-            <input type="text" placeholder="Username" onBlur={usernameBlurr} onChange={updateName}/>
-            <br />
-            {usernmaeErrorMessage}
-            <br />
-            <input type="text" placeholder="Password" onChange={updateInitalPassword} onBlur={initalPasswordBlur}/>
-            <br />
-            {initalPasswordErrorMessage}
-            <br />
-            <input type="text" placeholder="Confirm Password" onChange={updatedConfirmedPassword} onBlur={updatedPasswordBlur}/>
-            <br /> 
-            {cofirmedPasswordErrorMessage}
-            <br />
-            <input type="text" placeholder="Email address" onChange={updateEmail} onBlur={updateEmailBlur}/>
-            <br />
-            <button > submit</button>
-        </form>
+        <div>
+            <form onSubmit={formSubmit}>
+                <input type="text" placeholder="Username" onBlur={usernameBlurr} onChange={updateName}/>
+                <br />
+                {usernmaeErrorMessage}
+                <br />
+                <input type="text" placeholder="Password" onChange={updateInitalPassword} onBlur={initalPasswordBlur}/>
+                <br />
+                {initalPasswordErrorMessage}
+                <br />
+                <input type="text" placeholder="Confirm Password" onChange={updatedConfirmedPassword} onBlur={updatedPasswordBlur}/>
+                <br /> 
+                {cofirmedPasswordErrorMessage}
+                <br />
+                <input type="text" placeholder="Email address" onChange={updateEmail} onBlur={updateEmailBlur}/>
+                <br />
+                <button > submit</button>
+            </form>
+              {postError} 
+        </div>
         )
 }
 export default Signup

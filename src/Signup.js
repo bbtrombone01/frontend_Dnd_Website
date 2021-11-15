@@ -1,11 +1,11 @@
-import {useState} from 'react'
-import {useNavigate} from "react-router-dom"
+import {useState,useContext} from 'react'
+import {AuthContext } from './context/auth-context'
 
 //  come up with css 
 
 function Signup () {
 
-    const navigate = useNavigate()
+    const auth = useContext(AuthContext)
     
     // state for  each form input field, should be updated every keystroke
     const [currentName, setName] = useState("")
@@ -134,7 +134,7 @@ function Signup () {
                     let finalmessage = await fetchedDatat.json()
                     setPostErorrMessage(finalmessage["message"])
                     if(finalmessage["message"] === "i have recived a user"){
-                        navigate("/homepage")
+                        auth.login(finalmessage)
                     }
                 } catch (error){
                         setPostErorrMessage("Failed to connect to server please try again later")

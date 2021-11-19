@@ -1,10 +1,14 @@
 import {useState,useContext} from 'react'
 import {AuthContext } from './context/auth-context'
+import {useNavigate} from "react-router-dom"
 
 //  come up with css 
 
 function Signup () {
 
+
+    const naviagte = useNavigate()
+    
     const auth = useContext(AuthContext)
     
     // state for  each form input field, should be updated every keystroke
@@ -121,7 +125,7 @@ function Signup () {
         if(usernameStatus && initalPasswordStatus && confirnedPasswordStatus && emailStatus ){
            
             try {
-                const fetchedDatat = await fetch('http://localhost:5000/test',{
+                const fetchedDatat = await fetch('http://localhost:5000/signup',{
                      method: "POST",
                      headers: {'Content-Type': 'application/json'},
                      body: JSON.stringify({
@@ -130,6 +134,27 @@ function Signup () {
                          "email": currentEmail
                          })
                     })
+
+                    // fetch('http://localhost:5000/login',{
+                    //     method: "POST",
+                    //     headers: {'Content-Type': 'application/json'},
+                    //     body: JSON.stringify( {
+                    //         "username": username,
+                    //         "password": password
+                    //     })
+
+
+
+
+
+
+
+
+
+
+
+
+
                     // may want to come back and  set try/ catch block
                     let finalmessage = await fetchedDatat.json()
                     setPostErorrMessage(finalmessage["message"])
@@ -141,6 +166,12 @@ function Signup () {
                     }
             }
           
+    }
+
+    // pushes user to login page
+
+    const changepage = () =>{
+        naviagte("/login")
     }
     
     return (
@@ -163,6 +194,8 @@ function Signup () {
                 <button > submit</button>
             </form>
               {postError} 
+
+            <button onClick={changepage}  > login </button>
         </div>
         )
 }

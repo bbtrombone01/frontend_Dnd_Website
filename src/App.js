@@ -3,6 +3,7 @@ import { AuthContext } from "./context/auth-context";
 import {Routes,Route} from "react-router-dom"
 import Signup from "./Signup";
 import Homepage from "./Homepage";
+import Login from "./Login";
 
 
 function App() {
@@ -12,21 +13,18 @@ function App() {
   const login = useCallback( (token) => {
     setToken(token)
     localStorage.setItem('token', token.token)
-    // debugger
   },[])
 
   const logout = useCallback( () => {
-    // debugger
     setToken(null)
     localStorage.removeItem("token")
   },[])
 
   useEffect(()=>{
-    const storedToken = localStorage.getItem("token")
+  const storedToken = localStorage.getItem("token")
     if(storedToken){
       login(storedToken)
     }
-    // debugger
   },[login])
 
   let routes;
@@ -41,16 +39,13 @@ function App() {
     routes = (
     <Routes>
       <Route path ="/" element={<Signup />}/>
+      <Route path ="/login" element={<Login />}/>
     </Routes>)
   }
 
   return (
     <AuthContext.Provider value ={{login: login, logout: logout}} >
       {routes}
-      {/* <Routes>
-        <Route  path ="/" element={<Signup />} />
-        <Route  path = "/homepage" element={<Homepage />}/>
-      </Routes> */}
     </AuthContext.Provider> 
   )
 }

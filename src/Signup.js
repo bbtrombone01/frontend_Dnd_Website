@@ -6,9 +6,8 @@ import {useNavigate} from "react-router-dom"
 
 function Signup () {
 
-
     const naviagte = useNavigate()
-    
+
     const auth = useContext(AuthContext)
     
     // state for  each form input field, should be updated every keystroke
@@ -74,6 +73,8 @@ function Signup () {
         }
     }
 
+    // uses regex for password critiera 
+
     const initalPasswordBlur = () =>{
         // At least one upper case English letter, (?=.*?[A-Z])
         // At least one lower case English letter, (?=.*?[a-z])
@@ -104,6 +105,8 @@ function Signup () {
             }
         }
     }
+
+    // checks to see if passwords match
     
     const updatedPasswordBlur = ()=>{
         if(confirnedPassword === initalPassword){
@@ -113,6 +116,9 @@ function Signup () {
                 setConfirmedPasswordMessage("Your passwords do not match")
         }
     }
+
+    // maybe change this to do some form of making sure it is possiblity an email
+    // backend will handle the real validation
 
     const updateEmailBlur =()=>{
         setEmailStatus(true)
@@ -124,6 +130,7 @@ function Signup () {
 
         if(usernameStatus && initalPasswordStatus && confirnedPasswordStatus && emailStatus ){
            
+            // fetch request to add user to database
             try {
                 const fetchedDatat = await fetch('http://localhost:5000/signup',{
                      method: "POST",
@@ -134,26 +141,6 @@ function Signup () {
                          "email": currentEmail
                          })
                     })
-
-                    // fetch('http://localhost:5000/login',{
-                    //     method: "POST",
-                    //     headers: {'Content-Type': 'application/json'},
-                    //     body: JSON.stringify( {
-                    //         "username": username,
-                    //         "password": password
-                    //     })
-
-
-
-
-
-
-
-
-
-
-
-
 
                     // may want to come back and  set try/ catch block
                     let finalmessage = await fetchedDatat.json()
@@ -180,22 +167,21 @@ function Signup () {
                 <input type="text" placeholder="Username" onBlur={usernameBlurr} onChange={updateName}/>
                 <br />
                 {usernmaeErrorMessage}
-                <br />
+                <br/>
                 <input type="text" placeholder="Password" onChange={updateInitalPassword} onBlur={initalPasswordBlur}/>
-                <br />
+                <br/>
                 {initalPasswordErrorMessage}
-                <br />
+                <br/>
                 <input type="text" placeholder="Confirm Password" onChange={updatedConfirmedPassword} onBlur={updatedPasswordBlur}/>
-                <br /> 
+                <br/> 
                 {cofirmedPasswordErrorMessage}
-                <br />
+                <br/>
                 <input type="text" placeholder="Email address" onChange={updateEmail} onBlur={updateEmailBlur}/>
-                <br />
-                <button > submit</button>
+                <br/>
+                <button> submit</button>
             </form>
               {postError} 
-
-            <button onClick={changepage}  > login </button>
+            <button onClick={changepage}> login </button>
         </div>
         )
 }

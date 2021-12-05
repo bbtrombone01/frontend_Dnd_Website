@@ -1,5 +1,5 @@
 import {useState,useContext} from 'react'
-import {AuthContext } from './context/auth-context'
+import {AuthContext } from '../context/auth-context'
 import {useNavigate} from "react-router-dom"
 
 //  come up with css 
@@ -26,6 +26,11 @@ function Signup () {
     const [initalPasswordErrorMessage, setInitalPasswordError]= useState("")
 
     const [cofirmedPasswordErrorMessage, setConfirmedPasswordMessage] =useState("")
+
+    const[emailErrorMessage, setEmailErrorMessage] = useState("")
+
+    const[formErrorMessage, setFormMessage] = useState("")
+    
 
     //  state for when the form tries to submit each state must be true for form to submit 
     const [usernameStatus, setUsernameStatus]= useState(false)
@@ -121,7 +126,15 @@ function Signup () {
     // backend will handle the real validation
 
     const updateEmailBlur =()=>{
-        setEmailStatus(true)
+
+        let emailRe = /[\w-]+@([\w-]+\.)+[\w-]+/
+        
+        if(emailRe.test(currentEmail)){
+            setEmailStatus(true)
+        }else{
+            setEmailErrorMessage("please try another email address")
+        }
+
     }
 
     // will check overall form validity the send post request to node back end. 
@@ -151,6 +164,8 @@ function Signup () {
                 } catch (error){
                         setPostErorrMessage("Failed to connect to server please try again later")
                     }
+            }else{
+                setFormMessage(" please fill out the entire form ")
             }
           
     }
@@ -177,10 +192,13 @@ function Signup () {
                 {cofirmedPasswordErrorMessage}
                 <br/>
                 <input type="text" placeholder="Email address" onChange={updateEmail} onBlur={updateEmailBlur}/>
+                {emailErrorMessage}
                 <br/>
                 <button> submit</button>
             </form>
-              {postError} 
+                {formErrorMessage}
+                {postError} 
+                <br />
             <button onClick={changepage}> login </button>
         </div>
         )

@@ -1,6 +1,7 @@
 import {useNavigate} from "react-router-dom"
 import {useState,useContext} from "react"
-import { AuthContext } from "./context/auth-context"
+import {AuthContext } from "../context/auth-context"
+
 
 
 function Login() {
@@ -15,6 +16,7 @@ function Login() {
     const [password, setPassword] = useState("")
 
     // set state for handling error messages
+    // change name of this state adding error module for forgoten info ?
 
     const [errorMessage, setErrorMessage] =useState("")
 
@@ -67,6 +69,11 @@ function Login() {
         }
     }
 
+    const naviagteToForgotInfo = ()=>{
+        naviagte("/forgotInfo")
+    }
+
+
     return (
         <div>
             <form onSubmit={loginRequest}>
@@ -79,6 +86,8 @@ function Login() {
             {errorMessage}
             <br/>
             <button onClick={changePage}> sign up </button>
+            <br />
+            <button onClick={naviagteToForgotInfo}> forgot password </button> 
         </div>
     )
 }

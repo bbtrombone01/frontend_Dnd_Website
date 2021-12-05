@@ -1,9 +1,11 @@
 import {useState, useCallback, useEffect} from "react"
 import { AuthContext } from "./context/auth-context";
 import {Routes,Route} from "react-router-dom"
-import Signup from "./Signup";
+import Signup from "./login&signup/Signup";
 import Homepage from "./Homepage";
-import Login from "./Login";
+import Login from "./login&signup/Login";
+import ForgottenInfoRequest from "./login&signup/ForgottenInfoRequest";
+import ResetPassword from "./login&signup/RestPassword";
 
 
 function App() {
@@ -40,6 +42,8 @@ function App() {
     <Routes>
       <Route path ="/" element={<Signup />}/>
       <Route path ="/login" element={<Login />}/>
+      <Route path="/forgotInfo" element={<ForgottenInfoRequest />}/>
+      <Route path ="/reset-password/:params" element={<ResetPassword />} />
     </Routes>)
   }
 
